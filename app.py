@@ -46,7 +46,7 @@ system_prompts = {
 }
 
 # Streamlit UI
-st.title("Math Tutor for Grade 8 - International School of Cardoba, Talagang")
+st.title("Math Tutor for Grade 8")
 
 # Radio button for selecting system prompt
 selected_prompt = st.radio(
