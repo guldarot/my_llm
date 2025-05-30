@@ -52,7 +52,7 @@ model = genai.GenerativeModel(
 )
 
 # User input
-user_input = st.text_input("Your input:", placeholder="e.g. what you want to do")
+user_input = st.text_input("Your input:", placeholder="e.g. what you want to do now")
 
 if user_input:
     with st.spinner("Thinking..."):
