@@ -64,8 +64,7 @@ if st.button("Send"):
 
         try:
             # Call OpenAI API (using a placeholder model, replace with desired model)
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",  # Replace with your preferred model
+            response = model.generate_content(user_input)
                 messages=messages,
                 max_tokens=500
             )
