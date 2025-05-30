@@ -23,7 +23,7 @@ system_prompts = {
 # Load model
 model = genai.GenerativeModel(
     model_name = "gemini-1.5-flash",
-    system_instruction=system_prompt
+    
 )
 
 # Streamlit app configuration
