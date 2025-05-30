@@ -20,21 +20,15 @@ system_prompts = {
     "10": "You are a concise fact-checker, verifying information with brevity."
 }
 
-# Load model
-model = genai.GenerativeModel(
-    model_name = "gemini-1.5-flash",
-    
-)
-
 # Streamlit app configuration
-st.set_page_config(page_title="My LLM Interface", layout="wide")
+st.set_page_config(page_title="Gemini Chat Interface", layout="wide")
 
 # Initialize session state for chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # Title and description
-st.title("LLM Chat Interface")
+st.title("Gemini Chat Interface")
 st.markdown("Select a system prompt and interact with the AI assistant.")
 
 # Sidebar for system prompt selection
@@ -56,20 +50,24 @@ if st.button("Send"):
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": user_input})
 
-        # Prepare messages for OpenAI API
-        messages = [
-            {"role": "system", "content": system_prompts[selected_prompt]},
-            *st.session_state.messages
-        ]
+        # Prepare the prompt with system instruction and conversation history
+        conversation = f"System: {system_prompts[selected_prompt]}\n\n"
+        for message in st.session_state.messages:
+            role = "User" if message["role"] == "user" else "Assistant"
+            conversation += f"{role}: {message['content']}\n\n"
 
         try:
-            # Call OpenAI API (using a placeholder model, replace with desired model)
-            response = model.generate_content(user_input,
-                messages=messages,
-                max_tokens=500
+            # Initialize Gemini model
+            model = genai.GenerativeModel('gemini-1.5-pro')  # Replace with desired Gemini model
+            response = model.generate_content(
+                conversation,
+                generation_config={
+                    "max_output_tokens": 500,
+                    "temperature": 0.7
+                }
             )
             # Add assistant response to chat history
-            assistant_response = response.choices[0].message.content
+            assistant_response = response.text
             st.session_state.messages.append({"role": "assistant", "content": assistant_response})
         except Exception as e:
             st.error(f"Error: {str(e)}")
