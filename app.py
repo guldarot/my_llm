@@ -46,7 +46,7 @@ system_prompts = {
 }
 
 # Streamlit UI
-st.title("Math Tutor for Grade 8")
+st.title("My LLM at Future GCS")
 
 # Radio button for selecting system prompt
 selected_prompt = st.radio(
@@ -62,7 +62,7 @@ model = genai.GenerativeModel(
 )
 
 # User input
-user_input = st.text_input("Your math question:", placeholder="e.g. The sum of three consecutive integers is 72. What are the integers?")
+user_input = st.text_input("Your input:", placeholder="e.g. what you want to do")
 
 if user_input:
     with st.spinner("Thinking..."):
