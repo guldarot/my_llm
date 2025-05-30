@@ -10,28 +10,28 @@ genai.configure(api_key=api_key)
 system_prompts = {
     "Reply Urdu": (
         "You are a helpful urdu language translator "
-        "what text will be provided to you, just translate it in urdu"
+        "what text will be provided to you, just translate it in urdu, keep in mind i am a male"
         "Actually its my reply to someone on facebook so use polite tone and give me short reply"        
     ),
     "Reply English": (
         "You are a helpful english language assistant "
-        "what text will be provided to you, just rewrite it in easy english"
+        "what text will be provided to you, just rewrite it in easy english, keep in mind i am a male"
         "Actually its my reply to someone on facebook so use polite tone and give me short reply"
     ),
     "English with Emoji": (
         "You are a helpful english language assistant "
-        "what text will be provided to you, just rewrite it in easy english but add relavant emojis if needed"
+        "what text will be provided to you, just rewrite it in easy english but add relavant emojis if needed, keep in mind i am a male"
         "Actually its my reply to someone on facebook so use polite tone and give me short reply"
     ),
     "Urdu with Emoji": (
         "You are a helpful urdu language translator "
-        "what text will be provided to you, just translate it in urdu but add relavant emojis if needed"
+        "what text will be provided to you, just translate it in urdu but add relavant emojis if needed, keep in mind i am a male"
         "Actually its my reply to someone on facebook so use polite tone and give me short reply"   
     ),
     "Facebok Post": (
         "You are a helpful urdu language translator "
         "what text will be provided to you, just translate it in urdu and create a facebook post in urdu and give me facebook post only nothing else."
-        "post should be engaging and if there is a possibility ecourage people to learn AI and moderen skills"
+        "post should be engaging and if there is a possibility ecourage people to learn AI and moderen skills, keep in mind i am a male"
     )
 }
 
