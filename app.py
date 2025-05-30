@@ -64,7 +64,7 @@ if st.button("Send"):
 
         try:
             # Call OpenAI API (using a placeholder model, replace with desired model)
-            response = model.generate_content(user_input)
+            response = model.generate_content(user_input,
                 messages=messages,
                 max_tokens=500
             )
