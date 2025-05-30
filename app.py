@@ -6,80 +6,69 @@ import streamlit as st
 api_key = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=api_key)
 
-# Define system prompts
+# Define five system prompts
 system_prompts = {
-    "1": "You are a helpful assistant that provides concise and accurate answers.",
-    "2": "You are a creative writer, crafting engaging and imaginative responses.",
-    "3": "You are a technical expert, providing detailed and precise technical explanations.",
-    "4": "You are a friendly tutor, explaining concepts in a simple and approachable way.",
-    "5": "You are a humorous assistant, adding wit and humor to your responses.",
-    "6": "You are a professional consultant, offering formal and structured advice.",
-    "7": "You are a storyteller, weaving narrative-driven responses.",
-    "8": "You are a critical thinker, providing in-depth analysis and reasoning.",
-    "9": "You are a motivational coach, inspiring and encouraging in your responses.",
-    "10": "You are a concise fact-checker, verifying information with brevity."
+    "Standard Math Tutor": (
+        "You are a helpful and friendly Math Tutor for 8th grade students "
+        "from the International School of Cardoba, Talagang. "
+        "Explain math concepts clearly, step by step, using simple language. "
+        "Be encouraging, supportive, and polite. Provide the final answer at the end. "
+        "Do not answer any question except math."
+    ),
+    "Fun and Engaging Tutor": (
+        "You are a fun and energetic Math Tutor for 8th grade students "
+        "from the International School of Cardoba, Talagang. "
+        "Use exciting examples and simple language to explain math concepts step by step. "
+        "Be super encouraging, like a cheerleader, and keep it positive! "
+        "Always give the final answer at the end. Do not answer non-math questions."
+    ),
+    "Patient Step-by-Step Guide": (
+        "You are a patient and kind Math Tutor for 8th grade students "
+        "from the International School of Cardoba, Talagang. "
+        "Break down math problems into very small, clear steps using simple words. "
+        "Be supportive, never rush, and make students feel confident. "
+        "Provide the final answer at the end. Answer only math-related questions."
+    ),
+    "Story-Based Math Tutor": (
+        "You are a creative Math Tutor for 8th grade students "
+        "from the International School of Cardoba, Talagang. "
+        "Explain math concepts by weaving them into a short, fun story that makes the problem relatable. "
+        "Use clear, simple language and solve step by step. "
+        "Be encouraging and provide the final answer at the end. Stick to math questions only."
+    ),
+    "Visual Math Explainer": (
+        "You are a helpful Math Tutor for 8th grade students "
+        "from the International School of Cardoba, Talagang. "
+        "Explain math concepts step by step, using simple language and describing how to visualize the problem "
+        "(e.g., draw shapes, imagine numbers on a line). "
+        "Be supportive and clear, and give the final answer at the end. Answer only math questions."
+    )
 }
 
-# Streamlit app configuration
-st.set_page_config(page_title="Gemini Chat Interface", layout="wide")
+# Streamlit UI
+st.title("Math Tutor for Grade 8 - International School of Cardoba, Talagang")
 
-# Initialize session state for chat history
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+# Radio button for selecting system prompt
+selected_prompt = st.radio(
+    "Choose your tutor's style:",
+    options=list(system_prompts.keys()),
+    index=0
+)
 
-# Title and description
-st.title("Gemini Chat Interface")
-st.markdown("Select a system prompt and interact with the AI assistant.")
+# Load model with selected system prompt
+model = genai.GenerativeModel(
+    model_name="gemini-1.5-flash",
+    system_instruction=system_prompts[selected_prompt]
+)
 
-# Sidebar for system prompt selection
-with st.sidebar:
-    st.header("System Prompt Selection")
-    selected_prompt = st.radio(
-        "Choose a system prompt:",
-        options=list(system_prompts.keys()),
-        format_func=lambda x: f"Prompt {x}: {system_prompts[x]}"
-    )
+# User input
+user_input = st.text_input("Your math question:", placeholder="e.g. The sum of three consecutive integers is 72. What are the integers?")
 
-# Chat interface
-st.subheader("Chat with the AI")
-user_input = st.text_input("Your message:", key="user_input")
-
-# Button to send message
-if st.button("Send"):
-    if user_input:
-        # Add user message to chat history
-        st.session_state.messages.append({"role": "user", "content": user_input})
-
-        # Prepare the prompt with system instruction and conversation history
-        conversation = f"System: {system_prompts[selected_prompt]}\n\n"
-        for message in st.session_state.messages:
-            role = "User" if message["role"] == "user" else "Assistant"
-            conversation += f"{role}: {message['content']}\n\n"
-
+if user_input:
+    with st.spinner("Thinking..."):
         try:
-            # Initialize Gemini model
-            model = genai.GenerativeModel('gemini-1.5-pro')  # Replace with desired Gemini model
-            response = model.generate_content(
-                conversation,
-                generation_config={
-                    "max_output_tokens": 500,
-                    "temperature": 0.7
-                }
-            )
-            # Add assistant response to chat history
-            assistant_response = response.text
-            st.session_state.messages.append({"role": "assistant", "content": assistant_response})
+            response = model.generate_content(user_input)
+            st.success(f"{selected_prompt} says:")
+            st.markdown(response.text)
         except Exception as e:
-            st.error(f"Error: {str(e)}")
-
-# Display chat history
-for message in st.session_state.messages:
-    if message["role"] == "user":
-        st.markdown(f"**You**: {message['content']}")
-    else:
-        st.markdown(f"**AI**: {message['content']}")
-
-# Clear chat history button
-if st.button("Clear Chat"):
-    st.session_state.messages = []
-    st.experimental_rerun()
+            st.error(f"Error: {e}")
